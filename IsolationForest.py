@@ -1,9 +1,7 @@
-import datetime
 import tkinter
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from tkinter import filedialog
 from sklearn import preprocessing
 from sklearn.ensemble import IsolationForest
@@ -46,7 +44,7 @@ train, test = train_test_split(df, test_size=0.3, random_state=rsg)
 IsoF = IsolationForest(n_estimators=n_estimation, contamination=contamination, random_state=rsg)
 IsoF.fit(train)
 
-# predict test data and calculate anomaly score
+# predict test data
 IsoF = IsolationForest(n_estimators=n_estimation, contamination=contamination, random_state=rsg, warm_start=True)
 IsoF.fit(test)
 
@@ -55,7 +53,7 @@ Y_out_pred   = IsoF.predict(df)
 df['Outlier'] = Y_out_pred
 outliers = df.loc[df['Outlier'] == -1]
 outliers_index = list(outliers.index)
-print(f'Number of outliers: {len(outliers.index)}')
+print(f'\nNumber of outliers: {len(outliers.index)}')
 
 # remove outliers from dataframe
 df.drop(index=outliers_index, inplace=True)
