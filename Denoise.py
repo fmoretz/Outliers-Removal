@@ -25,7 +25,7 @@ df = df.reset_index(drop=True)
 
 # convert dataframe to array
 time_index = df.iloc[:, 0].values
-sensor = df.iloc[:, 2].values
+sensor = df.iloc[:, 1].values
 
 # compute fft of sensor data
 dt = 0.001
@@ -36,7 +36,7 @@ PSD  = fhat*np.conj(fhat)/n
 freq = (1/(dt*n)) * np.arange(n)
 L    = np.arange(1, np.floor(n/2), dtype='int')
 
-indices   = PSD > 0.02
+indices   = PSD > 0.01
 PSD_clean = PSD * indices
 fhat_new  = fhat * indices
 ffilt     = np.fft.ifft(fhat_new)
