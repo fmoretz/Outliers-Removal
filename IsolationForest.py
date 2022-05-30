@@ -77,8 +77,8 @@ for i in range(0, lencol):
     xy = pd.DataFrame({'x': x,
                        'y': y})
     
-    if lencol >= 6:
-        plt.subplot(lencol/2+1, 2, i+1)
+    if lencol % 2 == 0:
+        plt.subplot(lencol/2, lencol/2, i+1)
     else:
         plt.subplot(lencol, 1, i+1)
     
@@ -95,6 +95,7 @@ for i in range(0, lencol):
         )
     
 df.hist(color='#0f4c81')
+
 plt.subplots_adjust(
         left   = 0.1,
         bottom = 0.1,
