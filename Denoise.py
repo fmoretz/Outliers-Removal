@@ -23,7 +23,7 @@ df = df.reset_index(drop=True)
 
 # convert dataframe to array
 time_index = df.iloc[:, 0].values
-sensor = df.iloc[:, 2].values
+sensor = df.iloc[:, 1].values
 
 # compute fft of sensor data
 dt = 0.001
@@ -38,11 +38,19 @@ L    = np.arange(1, np.floor(n/2), dtype='int')
 PSD_split = np.array_split(PSD, int(np.floor(n/50)))
 
 ## activate for debugging
-plt.figure(0)
-plt.tight_layout()
-for i in range(0, len(PSD_split)):
-    plt.subplot(1,len(PSD_split),i+1)
-    plt.plot(PSD_split[i])
+# plt.figure(0)
+# plt.tight_layout()
+# for i in range(0, len(PSD_split)):
+#     plt.subplot(1,len(PSD_split),i+1)
+#     plt.plot(PSD_split[i])
+# plt.subplots_adjust(
+#     left   = 0.1,
+#     bottom = 0.1,
+#     right  = 0.95,
+#     top    = 0.95,
+#     wspace = 0.3,
+#     hspace = 0.3
+#     )
 
 peak_index = np.empty(len(PSD_split))
 freq_peak  = np.empty(len(PSD_split))
@@ -64,8 +72,9 @@ for i in range(len(rel_err_freq)):
         pass
     elif rel_err_freq[i] < 50:
         peak_passed.append(freq_peak[i])
-    
-indices   = PSD > min(peak_passed)
+
+condition = max(peak_passed) - (max(peak_passed) * 0.01)
+indices   = PSD > condition
 PSD_clean = PSD * indices
 fhat_new  = fhat * indices
 ffilt     = np.fft.ifft(fhat_new)
@@ -89,6 +98,7 @@ plt.legend()
 plt.subplot(313)
 plt.plot(freq[L], PSD[L], 'k', label='Raw PSD')
 plt.plot(freq[L], PSD_clean[L], 'r', label='Clean PSD')
+plt.axhline(y=condition, color='k', linestyle='--')
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('PSD')
 plt.xlim(freq[L[0]], freq[L[-1]])
